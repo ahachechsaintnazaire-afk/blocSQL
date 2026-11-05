@@ -13,8 +13,8 @@
  TABLES UTILISEES
    RDV       : rendez-vous / intervention planifiee (R0CLEUNIK, I0CLEUNIK = chirurgien,
                P2CLEUNIK = acte principal, DATERDV, ETATRDV, SACLEUNIK = salle)
-   INTERVNT  : intervenants (I0CLEUNIK, NOMINTER, PRENOMINTER, SPCLEUNIK = specialite)
-   SPECIAL   : specialites (SPCLEUNIK, LIBELSPEC)
+   INTERVNT  : intervenants (I0CLEUNIK, NOMINTER, PRENOMINTER)
+   SPECIAL   : specialites (SPCLEUNIK, LIBELSPEC), jointe sur PROTOBL.SPCLEUNIK
    PROTOBL   : actes / protocoles du bloc (P2CLEUNIK, NOMPROTO = libelle, SPCLEUNIK)
    INTVTION  : intervention effectivement tracee (I1CLEUNIK, R0CLEUNIK -> RDV)
 
@@ -26,13 +26,14 @@
    SPECIALITE, CHIRURGIEN (NOM PRENOM), ACTE (libelle), NB_INTERVENTIONS
 
  LOGIQUE
-   1. RDV -> INTERVNT (chirurgien) -> SPECIAL (specialite du chirurgien).
-   2. RDV -> PROTOBL (libelle de l'acte principal).
+   1. RDV -> INTERVNT (chirurgien) ; RDV -> PROTOBL -> SPECIAL (specialite de l'acte).
+   2. Libelle de l'acte principal : PROTOBL.NOMPROTO.
    3. Seuls les RDV ayant une ligne INTVTION sont comptes (intervention reelle).
    4. Agregation par specialite / chirurgien / acte.
 
  POINTS D'ATTENTION
-   - La specialite est celle de l'intervenant (INTERVNT.SPCLEUNIK), pas celle de l'acte.
+   - La specialite est celle de l'ACTE (PROTOBL.SPCLEUNIK) : la specialite des praticiens
+     (INTERVNT.SPCLEUNIK) n'est pas renseignee (constate le 2026-11-05). Q4 compare les deux.
    - RDV.P2CLEUNIK = acte principal ; les actes secondaires sont dans RDVPRO.
    - Les valeurs de ETATRDV ne sont pas encore documentees : voir Q1.
    - Le filtre EXISTS sur INTVTION suppose qu'une intervention realisee y a une ligne,
@@ -44,6 +45,7 @@
 
  HISTORIQUE
    2026-11-05 | AH/Claude | Creation. Premier essai en erreur ORA-00933 (point-virgule final).
+   2026-11-05 | AH/Claude | Specialite = celle de l'acte (celle des praticiens non renseignee)
 
  REGLES DU REQUETEUR BLOC (voir docs/CONVENTIONS.md, section 8)
    - La requete commence par SELECT, sans commentaire devant.
@@ -81,8 +83,8 @@ SELECT
     , COUNT(DISTINCT R.R0CLEUNIK)          AS NB_INTERVENTIONS
 FROM   RDV R
 JOIN   INTERVNT IT ON IT.I0CLEUNIK = R.I0CLEUNIK
-LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = IT.SPCLEUNIK
 LEFT   JOIN PROTOBL PB ON PB.P2CLEUNIK = R.P2CLEUNIK
+LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = PB.SPCLEUNIK
 WHERE  R.DATERDV >= DATE '2026-01-01'
   AND  R.DATERDV <  DATE '2026-11-01'
   AND  EXISTS (SELECT 1 FROM INTVTION I WHERE I.R0CLEUNIK = R.R0CLEUNIK)
@@ -102,7 +104,8 @@ SELECT
     , COUNT(DISTINCT R.P2CLEUNIK)  AS NB_ACTES_DISTINCTS
 FROM   RDV R
 JOIN   INTERVNT IT ON IT.I0CLEUNIK = R.I0CLEUNIK
-LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = IT.SPCLEUNIK
+LEFT   JOIN PROTOBL PB ON PB.P2CLEUNIK = R.P2CLEUNIK
+LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = PB.SPCLEUNIK
 WHERE  R.DATERDV >= DATE '2026-01-01'
   AND  R.DATERDV <  DATE '2026-11-01'
   AND  EXISTS (SELECT 1 FROM INTVTION I WHERE I.R0CLEUNIK = R.R0CLEUNIK)

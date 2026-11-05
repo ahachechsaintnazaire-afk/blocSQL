@@ -13,10 +13,10 @@
  TABLES UTILISEES
    INTVTION  : intervention tracee (I1CLEUNIK, R0CLEUNIK, MTCLEUNIK = motif, DUREEINTVTION)
    RDV       : date de l'intervention (DATERDV), praticien (I0CLEUNIK), acte (P2CLEUNIK)
-   INTERVNT  : praticien (NOMINTER, PRENOMINTER, SPCLEUNIK)
-   SPECIAL   : specialite du praticien (LIBELSPEC)
+   INTERVNT  : praticien (NOMINTER, PRENOMINTER)
+   SPECIAL   : specialite de l'acte (LIBELSPEC, via PROTOBL.SPCLEUNIK)
    MOTIF     : motif de l'intervention (MTCLEUNIK, CODEMT, LIBELMT)
-   PROTOBL   : libelle de l'acte (NOMPROTO) - Q2 uniquement
+   PROTOBL   : acte principal du RDV (NOMPROTO, SPCLEUNIK = specialite)
 
  PARAMETRES (ecrits en dur dans la requete, a modifier avant execution)
    Date debut  : DATE '2023-01-01' - debut de periode
@@ -27,7 +27,7 @@
    NB_INTERVENTIONS, DUREE_TOTALE (somme de INTVTION.DUREEINTVTION, unite a confirmer)
 
  LOGIQUE
-   1. INTVTION -> RDV (date, praticien) -> INTERVNT -> SPECIAL.
+   1. INTVTION -> RDV (date, praticien) -> INTERVNT ; RDV -> PROTOBL -> SPECIAL (specialite de l'acte).
    2. Motif : INTVTION.MTCLEUNIK -> MOTIF.LIBELMT (« Non renseigne » si vide).
    3. Agregation par annee, mois, specialite, praticien, motif.
 
@@ -44,6 +44,7 @@
 
  HISTORIQUE
    2026-11-05 | AH/Claude | Creation (a tester)
+   2026-11-05 | AH/Claude | Specialite = celle de l'acte (celle des praticiens non renseignee)
 
  REGLES DU REQUETEUR BLOC (voir docs/CONVENTIONS.md, section 8)
    - La requete commence par SELECT, sans commentaire devant.
@@ -67,7 +68,8 @@ SELECT
 FROM   INTVTION I
 JOIN   RDV R      ON R.R0CLEUNIK  = I.R0CLEUNIK
 JOIN   INTERVNT IT ON IT.I0CLEUNIK = R.I0CLEUNIK
-LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = IT.SPCLEUNIK
+LEFT   JOIN PROTOBL PB ON PB.P2CLEUNIK = R.P2CLEUNIK
+LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = PB.SPCLEUNIK
 LEFT   JOIN MOTIF M    ON M.MTCLEUNIK  = I.MTCLEUNIK
 WHERE  R.DATERDV >= DATE '2023-01-01'
   AND  R.DATERDV <  DATE '2026-11-01'
@@ -91,8 +93,8 @@ SELECT
 FROM   INTVTION I
 JOIN   RDV R      ON R.R0CLEUNIK  = I.R0CLEUNIK
 JOIN   INTERVNT IT ON IT.I0CLEUNIK = R.I0CLEUNIK
-LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = IT.SPCLEUNIK
 LEFT   JOIN PROTOBL PB ON PB.P2CLEUNIK = R.P2CLEUNIK
+LEFT   JOIN SPECIAL SP ON SP.SPCLEUNIK = PB.SPCLEUNIK
 WHERE  R.DATERDV >= DATE '2023-01-01'
   AND  R.DATERDV <  DATE '2026-11-01'
 GROUP  BY TO_CHAR(R.DATERDV, 'YYYY'), TO_CHAR(R.DATERDV, 'MM'), SP.LIBELSPEC, IT.NOMINTER, IT.PRENOMINTER, PB.NOMPROTO

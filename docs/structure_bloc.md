@@ -34,7 +34,7 @@ Notes :
 - `RDV` est le planning ; `INTVTION` ajoute le déroulé réel (heures réelles `HDEBREELLE`/`HFINREELLE`, durée, comptage).
 - `RDVPRIS` est l'historique des prises de RDV (créneaux, motifs d'annulation `MARCLEUNIK`).
 - `INTERV_PERS` (+ `FCTSALLE`, `CATFCT`) : planning et fonction du personnel. `DISPOINTERVNT` : disponibilités des intervenants.
-- Spécialité : portée par l'intervenant (`INTERVNT.SPCLEUNIK`) et par l'acte (`PROTOBL.SPCLEUNIK`). Les deux peuvent différer.
+- Spécialité : à lire sur l'**acte** (`PROTOBL.SPCLEUNIK`). Celle des intervenants (`INTERVNT.SPCLEUNIK`) n'est pas renseignée (constaté le 2026-11-05, correction demandée au paramétrage). L'orthopédie est rangée sous **TRAUMATO** (actes PTH, PTG...). Libellé `HYGROMA DU GENOU` mal classé en DIGESTIF.
 
 ## 3. Tables du périmètre bloc
 

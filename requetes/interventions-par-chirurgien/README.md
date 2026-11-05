@@ -4,7 +4,7 @@ Activité du bloc : nombre d'interventions par spécialité, chirurgien et libel
 
 ## Contexte
 
-Première approche de l'activité du bloc. Modèle de liaison : `RDV` (chirurgien `I0CLEUNIK`, acte principal `P2CLEUNIK`) → `INTERVNT` (nom, `SPCLEUNIK`) → `SPECIAL` (libellé) ; libellé de l'acte dans `PROTOBL.NOMPROTO` ; intervention réelle = ligne dans `INTVTION` (`R0CLEUNIK`). Le premier essai du 2026-11-05 a échoué en ORA-00933 à cause du point-virgule final (retiré).
+Première approche de l'activité du bloc. Modèle de liaison : `RDV` (chirurgien `I0CLEUNIK`, acte principal `P2CLEUNIK`) → `INTERVNT` (nom) ; spécialité = `PROTOBL.SPCLEUNIK` → `SPECIAL` (libellé) ; libellé de l'acte dans `PROTOBL.NOMPROTO` ; intervention réelle = ligne dans `INTVTION` (`R0CLEUNIK`). Le premier essai du 2026-11-05 a échoué en ORA-00933 à cause du point-virgule final (retiré).
 
 ## Fichiers
 
@@ -26,5 +26,5 @@ Lancer Q1 d'abord pour identifier les états de RDV correspondant à une interve
 
 ## Points ouverts
 
-- La spécialité retenue est celle de l'intervenant ; celle de l'acte (`PROTOBL.SPCLEUNIK`) peut différer.
+- La spécialité retenue est celle de l'**acte** (`PROTOBL.SPCLEUNIK`) : celle des praticiens n'est pas renseignée. À rebasculer sur `INTERVNT.SPCLEUNIK` quand le paramétrage sera corrigé (Q4 compare les deux).
 - Les actes secondaires (`RDVPRO`) et les intervenants multiples (`RDVINT`) ne sont pas pris en compte.
