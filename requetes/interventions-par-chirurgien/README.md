@@ -9,6 +9,7 @@ Première approche de l'activité du bloc. Modèle de liaison : `RDV` (chirurgie
 ## Fichiers
 
 - `interventions_par-chirurgien_v01.sql` : totaux par spécialité, chirurgien, acte.
+- `interventions_detail-par-intervention_v01.sql` : une ligne par intervention pour faire les bilans sous Excel.
 - `interventions_evolution-mensuelle_v01.sql` : données à plat par année, mois, spécialité, praticien, motif (Q1) ou acte (Q2), pour calculer des évolutions dans Excel.
 
 ## Requetes contenues (par_chirurgien_v01)
@@ -19,6 +20,7 @@ Première approche de l'activité du bloc. Modèle de liaison : `RDV` (chirurgie
 | Q2. Interventions par spécialité, chirurgien et acte | à retester (ORA-00933 corrigé) |
 | Q3. Synthèse par spécialité (interventions, chirurgiens, actes distincts) | à tester |
 | Q4. Contrôle 2026 : RDV et interventions par praticien, spécialité et acte, sans filtre INTVTION | à tester |
+| `interventions_detail-par-intervention_v01.sql` Q1. Une ligne par intervention (dates, salle, praticien, acte, motif, anesthésie), tous états de RDV | à tester |
 
 ## Utilisation
 

@@ -3,6 +3,7 @@
 Historique global des évolutions du dépôt. Les détails de chaque requête sont dans son en-tête.
 
 ## 2026-11-05
+- interventions-par-chirurgien : extraction détaillée, une ligne par intervention (dates, salle, praticien, acte, motif, anesthésie), pour bilan sous Excel. À tester.
 - Spécialité des requêtes d'interventions = spécialité de l'acte (celle des praticiens n'est pas renseignée) ; orthopédie = TRAUMATO.
 - Création du dépôt : structure, conventions (contraintes du requêteur Bloc, ORA-00933 si point-virgule final), modèle d'en-tête.
 - Schéma Oracle complet du Bloc (888 tables, 9 178 colonnes) dans docs/schema_bloc_oracle.md, avec script de régénération (outils/).
