@@ -2,15 +2,16 @@
 
 Activité du bloc : nombre d'interventions par spécialité, chirurgien et libellé d'acte.
 
-## Fichier
-
-`interventions_par-chirurgien_v01.sql` - Interventions par spécialité, chirurgien et acte
-
 ## Contexte
 
 Première approche de l'activité du bloc. Modèle de liaison : `RDV` (chirurgien `I0CLEUNIK`, acte principal `P2CLEUNIK`) → `INTERVNT` (nom, `SPCLEUNIK`) → `SPECIAL` (libellé) ; libellé de l'acte dans `PROTOBL.NOMPROTO` ; intervention réelle = ligne dans `INTVTION` (`R0CLEUNIK`). Le premier essai du 2026-11-05 a échoué en ORA-00933 à cause du point-virgule final (retiré).
 
-## Requetes contenues
+## Fichiers
+
+- `interventions_par-chirurgien_v01.sql` : totaux par spécialité, chirurgien, acte.
+- `interventions_evolution-mensuelle_v01.sql` : données à plat par année, mois, spécialité, praticien, motif (Q1) ou acte (Q2), pour calculer des évolutions dans Excel.
+
+## Requetes contenues (par_chirurgien_v01)
 
 | Requete | Statut |
 |---|---|
