@@ -1,0 +1,10 @@
+# Aucune donnee extraite ni export dans le depot
+*.csv
+*.xlsx
+*.xls
+*.dmp
+*.log
+*.tmp
+~$*
+.DS_Store
+Thumbs.db
