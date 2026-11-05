@@ -18,6 +18,7 @@ Première approche de l'activité du bloc. Modèle de liaison : `RDV` (chirurgie
 | Q1. Répartition des RDV par état (valeurs de `ETATRDV`, avec/sans `INTVTION`) | à tester |
 | Q2. Interventions par spécialité, chirurgien et acte | à retester (ORA-00933 corrigé) |
 | Q3. Synthèse par spécialité (interventions, chirurgiens, actes distincts) | à tester |
+| Q4. Contrôle 2026 : RDV et interventions par praticien, spécialité et acte, sans filtre INTVTION | à tester |
 
 ## Utilisation
 

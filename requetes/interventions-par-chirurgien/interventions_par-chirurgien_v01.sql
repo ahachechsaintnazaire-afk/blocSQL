@@ -108,3 +108,29 @@ WHERE  R.DATERDV >= DATE '2026-01-01'
   AND  EXISTS (SELECT 1 FROM INTVTION I WHERE I.R0CLEUNIK = R.R0CLEUNIK)
 GROUP  BY SP.LIBELSPEC
 ORDER  BY COUNT(DISTINCT R.R0CLEUNIK) DESC
+
+-- ---------------------------------------------------------------------------
+-- Q4 - Controle 2026 : tous les RDV et interventions par praticien, specialite et acte
+-- Statut : a tester
+-- Note   : sans filtre sur INTVTION. NB_RDV = RDV de la periode (tous etats),
+--          NB_INTVTION = RDV ayant une ligne INTVTION. Periode 2026-01-01 a 2026-11-05.
+--          Ajoute la specialite de l'acte pour comparer avec celle du praticien.
+-- A COPIER DANS LE REQUETEUR : uniquement le bloc ci-dessous (commence par SELECT)
+-- ---------------------------------------------------------------------------
+SELECT
+      NVL(SI.LIBELSPEC, '(sans)')          AS SPEC_PRATICIEN
+    , IT.NOMINTER || ' ' || IT.PRENOMINTER AS PRATICIEN
+    , NVL(PB.NOMPROTO, '(sans acte)')      AS ACTE
+    , NVL(SA.LIBELSPEC, '(sans)')          AS SPEC_ACTE
+    , COUNT(DISTINCT R.R0CLEUNIK)          AS NB_RDV
+    , COUNT(DISTINCT I.I1CLEUNIK)          AS NB_INTVTION
+FROM   RDV R
+JOIN   INTERVNT IT     ON IT.I0CLEUNIK = R.I0CLEUNIK
+LEFT   JOIN SPECIAL SI ON SI.SPCLEUNIK = IT.SPCLEUNIK
+LEFT   JOIN PROTOBL PB ON PB.P2CLEUNIK = R.P2CLEUNIK
+LEFT   JOIN SPECIAL SA ON SA.SPCLEUNIK = PB.SPCLEUNIK
+LEFT   JOIN INTVTION I ON I.R0CLEUNIK = R.R0CLEUNIK
+WHERE  R.DATERDV >= DATE '2026-01-01'
+  AND  R.DATERDV <  DATE '2026-11-06'
+GROUP  BY SI.LIBELSPEC, IT.NOMINTER, IT.PRENOMINTER, PB.NOMPROTO, SA.LIBELSPEC
+ORDER  BY SI.LIBELSPEC, IT.NOMINTER, IT.PRENOMINTER, COUNT(DISTINCT R.R0CLEUNIK) DESC
